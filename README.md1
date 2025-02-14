@@ -1,0 +1,37 @@
+# HackBio Biocoding Internship - Stage Zero
+
+#Project Overview
+
+This repository contains my solution for organizing team information using an R data frame. The task required us to store the following data using any data structure of our choice:
+
+- Names
+- Slack Usernames
+- Email Addresses
+- Hobbies
+- Countries
+- Disciplines
+- Preferred Programming Languages
+
+In this solution, I used vectors to store each type of information and then combined them into a data frame called `team_info`.
+
+# Code Explanation
+
+1. Creating Vectors:
+   - I created separate vectors for each category:
+     - `name`: Contains the names of team members.
+     - `slack_name`: Contains the corresponding Slack usernames.
+     - `country`: Contains the countries of origin.
+     - `email`: Contains the email addresses.
+     - `hobby`: Contains the hobbies of each team member.
+     - `discipline`: Contains the academic disciplines.
+     - `preferred_lang`: Contains the preferred programming languages.
+
+2. Building the Data Frame:
+   - The individual vectors are combined using the `data.frame()` function to form the `team_info` data frame.
+   - This organizes the information in a tabular format, making it easy to view and manipulate.
+
+3. Displaying the Data Frame:
+   - The final step prints the `team_info` data frame to display the organized information.
+
+
+
