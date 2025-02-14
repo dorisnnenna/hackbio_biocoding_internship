@@ -1,0 +1,37 @@
+Hackbio _Stage_Zero Task 
+
+The Raw Code 
+#start coding... 
+name <- c("Doris", "Carol", "Angitha","Peace", "Akshar")
+slack_name <- c("DNA", "Love", "Angi", "Dove", "Kumar")
+country <- c("Nigeria", "Nigeria", "Pakistan","Nigeria", "India")
+email <- c("dorisnnenna2016@gmail.com", "carol@gmail.com", "Angitha@gmail.com", "Peace@gmail.com", "kumar@gmail.com")
+
+hobby <- c("traveling", "reading", "cooking", "singing", "dancing")
+discipline <- ("Biochemistry", "Biological Sciences", "Chemistry", "Biomedical Sciences", "Biophysics")
+preferred_lang <- c("R", "Python", "Python", "R", "Python")
+
+#create the dataframe
+team_info <- data.frame(name, slack_name, country, email, hobby, discipline, preferred_lang)
+print(team_info)
+
+
+
+
+
+
+
+
+The Output 
+ Name    slack_name   country                     email                      hobby
+1   Doris        DNA   Nigeria dorisnnenna2016@gmail.com traveling
+2   Carol       Love   Nigeria           carol@gmail.com            reading
+3 Angitha       Angi Pakistan         Angitha@gmail.com        cooking
+4   Peace       Dove   Nigeria           Peace@gmail.com          singing
+5  Akshar      Kumar    India           kumar@gmail.com       dancing
+           discipline          preferred_lang
+1        Biochemistry              R
+2 Biological Sciences         Python
+3           Chemistry            Python
+4 Biomedical Sciences          R
+5          Biophysics             Python
