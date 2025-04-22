@@ -29,6 +29,8 @@ Acts as an accessory protein in conjunction with CAV1 in targeting to lipid raft
 Required for the insulin-stimulated nuclear translocation and activation of MAPK1 and STAT3, and the subsequent regulation of cell cycle progression.
 4.	IFITM1 Gene: IFN-induced antiviral protein which inhibits the entry of viruses to the host cell cytoplasm, permitting endocytosis, but preventing subsequent viral fusion and release of viral contents into the cytosol.
 
+# https://www.linkedin.com/in/doris-amuji-29571b203/
+
 #Task 2.3
 pesticide <- read_delim('Pesticide_treatment_data.txt', delim = "\t")
 
