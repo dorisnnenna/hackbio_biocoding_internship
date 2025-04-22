@@ -1,0 +1,105 @@
+#Function to Translate DNA to protein
+translate_dna_to_protein <- function(dna_seq) {
+   dna_seq <- toupper(gsub("[^ATCG]", "", dna_seq))
+  
+ 
+  codon_table <- list(
+    "TTT" = "F", "TTC" = "F", "TTA" = "L", "TTG" = "L",
+    "CTT" = "L", "CTC" = "L", "CTA" = "L", "CTG" = "L",
+    "ATT" = "I", "ATC" = "I", "ATA" = "I", "ATG" = "M",
+    "GTT" = "V", "GTC" = "V", "GTA" = "V", "GTG" = "V",
+    "TCT" = "S", "TCC" = "S", "TCA" = "S", "TCG" = "S",
+    "CCT" = "P", "CCC" = "P", "CCA" = "P", "CCG" = "P",
+    "ACT" = "T", "ACC" = "T", "ACA" = "T", "ACG" = "T",
+    "GCT" = "A", "GCC" = "A", "GCA" = "A", "GCG" = "A",
+    "TAT" = "Y", "TAC" = "Y", "TAA" = "*", "TAG" = "*",
+    "CAT" = "H", "CAC" = "H", "CAA" = "Q", "CAG" = "Q",
+    "AAT" = "N", "AAC" = "N", "AAA" = "K", "AAG" = "K",
+    "GAT" = "D", "GAC" = "D", "GAA" = "E", "GAG" = "E",
+    "TGT" = "C", "TGC" = "C", "TGA" = "*", "TGG" = "W",
+    "CGT" = "R", "CGC" = "R", "CGA" = "R", "CGG" = "R",
+    "AGT" = "S", "AGC" = "S", "AGA" = "R", "AGG" = "R",
+    "GGT" = "G", "GGC" = "G", "GGA" = "G", "GGG" = "G"
+  )
+  
+  protein <- ""
+  for (i in seq(1, nchar(dna_seq) - 2, by = 3)) {
+    codon <- substr(dna_seq, i, i + 2)
+    aa <- codon_table[[codon]]
+    if (is.null(aa)) {
+      aa <- "X"
+    }
+    protein <- paste0(protein, aa)
+  }
+  
+  return(protein)
+}
+
+dna_sequence <- "ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG"
+protein_sequence <- translate_dna_to_protein(dna_sequence)
+cat("Protein sequence:", protein_sequence, "\n")
+
+#Growth curve 
+simulate_logistic_growth <- function(time, K = 1, r = 1, N0 = 0.01, lag_range = c(2, 6), exp_range = c(8, 20)) {
+  # lag and exponential phase durations is randomized 
+  lag_phase <- sample(seq(lag_range[1], lag_range[2], by = 0.1), 1)
+  exp_phase <- sample(seq(exp_range[1], exp_range[2], by = 0.1), 1)
+  
+  # the growth rate is adjusted to simulate the extended lag and exponential phases
+  adj_r <- r / ((lag_phase + exp_phase) / mean(exp_range))
+  
+  population <- K / (1 + ((K - N0)/N0) * exp(-adj_r * (time - lag_phase)))
+  
+  # Keep population near N0 during lag phase
+  population[time < lag_phase] <- N0
+  
+  return(population)
+}
+
+set.seed(42)
+time_points <- seq(0, 30, by = 0.5)
+
+growth_data <- do.call(rbind, lapply(1:100, function(i) {
+  pop <- simulate_logistic_growth(time_points)
+  data.frame(
+    curve_id = i,
+    time = time_points,
+    population = pop
+  )
+}))
+
+time_to_80_percent <- function(time, population, threshold = 0.8) {
+  max_pop <- max(population)
+  target <- threshold * max_pop
+  idx <- which(population >= target)[1]
+  if (!is.na(idx)) {
+    return(time[idx])
+  } else {
+    return(NA)
+  }
+}
+
+# Apply it on one example curve
+example_curve <- subset(growth_data, curve_id == 1)
+time_to_80_percent(example_curve$time, example_curve$population)
+
+#Hamming Distance
+hamming_distance <- function(str1, str2) {
+  # Pad strings to same length
+  max_len <- max(nchar(str1), nchar(str2))
+  str1 <- str_pad(str1, width = max_len, side = "right", pad = "_")
+  str2 <- str_pad(str2, width = max_len, side = "right", pad = "_")
+  
+  # Split into characters
+  s1 <- strsplit(str1, "")[[1]]
+  s2 <- strsplit(str2, "")[[1]]
+  
+  # Count differing characters
+  sum(s1 != s2)
+}
+
+# Example
+library(stringr)
+slack_username <- "BioQueenDoris"
+twitter_handle <- "CancerCodeX"
+hamming_distance(slack_username, twitter_handle)
