@@ -13,6 +13,22 @@ downregulated_genes <- filter(transcriptomics, log2FoldChange < -1 & pvalue < 0.
 top5UPG <- head(upregulated_genes, 5)
 top5DPG <- head(downregulated_genes, 5)
 
+functions of the top 5 upregulated genes and top 5 downregulated genes
+Upregulated gene functions:
+1. EMILIN2 Gene: May be responsible for anchoring smooth muscle cells to elastic fibers, and may be involved not only in the formation of the elastic fiber, but also in the processes that regulate vessel assembly.
+2. POU3F4 Gene: Probable transcription factor which exert its primary action widely during early neural development and in a very limited set of neurons in the mature brain. 
+3. VEPH1 Gene: Interacts with TGF-beta receptor type-1 (TGFBR1) and inhibits dissociation of activated SMAD2 from TGFBR1, impeding its nuclear accumulation and resulting in impaired TGF-beta signaling. May also affect FOXO, Hippo and Wnt signaling. 
+4. Loc285954 : the function not found
+
+Downregulated gene functions:
+1.	LAMA2 Gene: Binding to cells via a high affinity receptor, laminin is thought to mediate the attachment, migration and organization of cells into tissues during embryonic development by interacting with other extracellular matrix component.
+2.	TBX5 Gene: DNA-binding protein that regulates the transcription of several genes and is involved in heart development and limb pattern formation.
+3.	CAV2 Gene: May act as a scaffolding protein within caveolar membranes.
+Interacts directly with G-protein alpha subunits and can functionally regulate their activity.
+Acts as an accessory protein in conjunction with CAV1 in targeting to lipid rafts and driving caveolae formation. The Ser-36 phosphorylated form has a role in modulating mitosis in endothelial cells. Positive regulator of cellular mitogenesis of the MAPK signaling pathway.
+Required for the insulin-stimulated nuclear translocation and activation of MAPK1 and STAT3, and the subsequent regulation of cell cycle progression.
+4.	IFITM1 Gene: IFN-induced antiviral protein which inhibits the entry of viruses to the host cell cytoplasm, permitting endocytosis, but preventing subsequent viral fusion and release of viral contents into the cytosol.
+
 #Task 2.3
 pesticide <- read_delim('Pesticide_treatment_data.txt', delim = "\t")
 
