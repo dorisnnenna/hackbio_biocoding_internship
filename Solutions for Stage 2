@@ -1,0 +1,172 @@
+library(tidyverse)
+library(dplyr)
+library(readr)
+
+#Task 2.6
+transcriptomics <- read.delim('results.txt', header = TRUE, sep= " ")
+ggplot(data = transcriptomics, aes(x = log2FoldChange, y = -log10(pvalue))) +
+  geom_point()
+
+upregulated_genes <- filter(transcriptomics, log2FoldChange > 1 & pvalue < 0.01 ) 
+downregulated_genes <- filter(transcriptomics, log2FoldChange < -1 & pvalue < 0.01 ) 
+
+top5UPG <- head(upregulated_genes, 5)
+top5DPG <- head(downregulated_genes, 5)
+
+#Task 2.3
+pesticide <- read_delim('Pesticide_treatment_data.txt', delim = "\t")
+
+#Transpose data
+pesticide_t <- t(pesticide)
+pesticide_t <- as.data.frame(pesticide_t)
+colnames(pesticide_t) <- pesticide_t[1, ]           # Set first row as new column names
+pesticide_t <- pesticide_t[-1, ]  
+
+
+pesticide_t$WT_ΔM <- as.numeric(pesticide_t$WT_pesticide_8h_1) - as.numeric(pesticide_t$WT_pesticide_8h_1) 
+pesticide_t$Mutant_ΔM <- as.numeric(pesticide_t$mutant_pesticide_24h_1) - as.numeric(pesticide_t$mutant_pesticide_8h_1)
+
+library(ggplot2)
+
+ggplot(pesticide_t, aes(x = WT_ΔM, y = Mutant_ΔM)) +
+  geom_point(color = "steelblue", size = 3) +
+  labs(
+    title = "Difference in Metabolic Response (ΔM) between WT and Mutants",
+    x = "ΔM (WT)",
+    y = "ΔM (Mutants)"
+  ) +
+  theme_minimal()
+
+ggplot(pesticide_t, aes(x = WT_ΔM, y = Mutant_ΔM)) +
+  geom_point(color = "steelblue", size = 3) +
+  geom_abline(intercept = 0, slope = 1, color = "red", linetype = "dashed") +
+  labs(
+    title = "Difference in Metabolic Response (ΔM) with Ideal Fit Line",
+    x = "ΔM (WT)",
+    y = "ΔM (Mutants)"
+  ) +
+  theme_minimal()
+
+
+pesticide_t$residuals <- pesticide_t$Mutant_ΔM - pesticide_t$WT_ΔM  
+
+# Apply cutoff (e.g., 0.3)
+cutoff <- 0.3
+pesticide_t$within_cutoff <- abs(pesticide_t$residuals) <= cutoff  # Flag points within the cutoff
+
+# Create a scatter plot with colored residuals
+ggplot(pesticide_t, aes(x = WT_ΔM, y = Mutant_ΔM)) +
+  geom_point(aes(color = within_cutoff), size = 3) +
+  geom_abline(intercept = 0, slope = 1, color = "red", linetype = "dashed") +
+  scale_color_manual(values = c("TRUE" = "grey", "FALSE" = "salmon")) +
+  labs(
+    title = "Metabolic Response Differences with Residuals Highlighted",
+    x = "ΔM (WT)",
+    y = "ΔM (Mutants)"
+  ) +
+  theme_minimal()
+
+
+outliers <- pesticide_t[pesticide_t$residuals < -cutoff | pesticide_t$residuals > cutoff, ]
+outliers_metabolites <- rownames(outliers)
+
+# Display outlier metabolites
+outliers_metabolites
+
+
+outlier_metabolites_6 <- sample(outliers_metabolites, 6)
+
+# Line plot for the selected 6 metabolites
+library(tidyr)
+
+# Reshape data for line plots
+pesticide_t_long <- pesticide_t_long[,-9]
+
+pesticide_t_long <- pesticide_t_long %>% 
+  mutate(RowName = rownames(pesticide_t_long)) %>% 
+  rownames_to_column(var = "RowName")
+
+
+pesticide_t_long$RowName <- rownames(pesticide_t_long)
+rownames(pesticide_t_long) <- NULL
+
+#Task 2.7
+nhanes <- read.csv('nhanes.csv', header = TRUE)
+
+#remove na values
+nhanes_clean <- na.omit(nhanes)
+
+#add columns for weight in pounds
+nhanes$Weight_pounds <- nhanes$Weight * 2.2
+
+par(mfrow = c(2, 2))
+
+# Histogram for BMI
+hist(nhanes$BMI,
+     main = "Distribution of BMI",
+     xlab = "BMI",
+     col = "lightblue",
+     border = "white")
+
+# Histogram for Weight (kg)
+hist(nhanes$Weight,
+     main = "Distribution of Weight (kg)",
+     xlab = "Weight (kg)",
+     col = "lightgreen",
+     border = "white")
+
+# Histogram for Weight in pounds
+hist(nhanes$Weight_pounds,
+     main = "Distribution of Weight (pounds)",
+     xlab = "Weight (lbs)",
+     col = "salmon",
+     border = "white")
+
+# Histogram for Age
+hist(nhanes$Age,
+     main = "Distribution of Age",
+     xlab = "Age",
+     col = "violet",
+     border = "white")
+
+#mean of pulse
+mean(nhanes$Pulse, na.rm = TRUE)
+
+#range of diastolic pressure
+min(nhanes$BPDia, na.rm = TRUE)
+max(nhanes$BPDia, na.rm = TRUE)
+
+range(nhanes$BPDia, na.rm = TRUE)
+
+#variance and SD for income
+var(nhanes$Income, na.rm = TRUE)      
+sd(nhanes$Income, na.rm = TRUE) 
+
+
+# Color by Gender
+ggplot(nhanes, aes(x = Height, y = Weight, color = Gender)) +
+  geom_point() +
+  labs(title = "Weight vs Height by Gender") +
+  theme_minimal()
+
+# Color by Diabetes
+ggplot(nhanes, aes(x = Height, y = Weight, color = Diabetes)) +
+  geom_point() +
+  labs(title = "Weight vs Height by Diabetes Status") +
+  theme_minimal()
+
+# Color by Smoking Status
+ggplot(nhanes, aes(x = Height, y = Weight, color = SmokingStatus)) +
+  geom_point() +
+  labs(title = "Weight vs Height by Smoking Status") +
+  theme_minimal()
+
+#T-tests
+#Age and gender
+t.test(Age ~ Gender, data = nhanes)
+
+#BMI and diabetes
+t.test(BMI ~ Diabetes, data = nhanes)
+
+#Alcohol and relationship Status
+t.test(AlcoholYear ~ RelationshipStatus, data = nhanes)
